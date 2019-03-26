@@ -11,9 +11,11 @@ var mongoose = require("mongoose-sql");
 mongoose.connect({
     client: "pg",
     connection : process.env.DATABASE_URL,
+},function(err) {
+  // If no error, successfully connected
+	console.log("connected" + err);
 });
 
-console.log("connected")
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -24,6 +26,8 @@ app.set('view engine', 'html');
 
 var postSchema = new mongoose.Schema({ title: String, body: String, date: String });
 var Post = mongoose.model('Post', postSchema);
+
+
 
 // Routes
 app.get("/", (req, res) => {
