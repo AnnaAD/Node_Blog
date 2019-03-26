@@ -13,6 +13,7 @@ mongoose.connect({
     connection : process.env.DATABASE_URL,
 });
 
+console.log("connected")
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -26,10 +27,10 @@ var Post = mongoose.model('Post', postSchema);
 
 // Routes
 app.get("/", (req, res) => {
-	Post.find({}, (err, posts) => {
-		console.log(posts);
-		res.render('index', { posts: posts})
-	    });
+	/*Post.find({}, (err, posts) => {
+		console.log(posts);*/
+		res.render('index')/*, { posts: posts})
+	});*/
     });
 
 app.post('/addpost', (req, res) => {
