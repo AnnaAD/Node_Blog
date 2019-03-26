@@ -11,7 +11,8 @@ var mongoose = require("mongoose-sql");
 mongoose.connect({
     client: "pg",
     connection : process.env.DATABASE_URL,
-},function(err) {
+}, function(err) {
+	console.log("WHAT");
   // If no error, successfully connected
 	console.log("connected" + err);
 });
