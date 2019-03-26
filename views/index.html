@@ -1,0 +1,30 @@
+<html>
+    <head>
+      <link href="style.css" rel="stylesheet" type="text/css">
+      <link href="https://fonts.googleapis.com/css?family=Germania+One" rel="stylesheet">
+      <script
+      src="http://code.jquery.com/jquery-3.3.1.min.js"
+      integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+      crossorigin="anonymous"></script>
+    </head>
+    <body>
+      <div id = "content">
+        <h1 class = "fancy"> Anna's Corner - Open to All</h1>
+        <hr>
+
+        <% for(let i = posts.length-1; i >= 0; i--) { %>
+            <h3 class = "fancy"><%- posts[i].title%></h3>
+            <h5 class = "fancy"> <%-  posts[i].date%> </h5>
+            <p class = "post"><%- posts[i].body.replace("<", '&#60;').replace(">","&#62;").replace(new RegExp('\r?\n','g'), '<br />') %></p>
+            <hr>
+        <% } %>
+      </div>
+      <div id = "space">
+      </div>
+        <form action="addPost" method = "POST">
+            <p class = "fancy"> Title: <input name = "title"/> </p>
+            <p class = "fancy"> Post: </p><textarea name="body"></textarea>
+            <p> <button type="submit" class = "fancy" id = "post_button"> Add Post </button> </p>
+        </form>
+    </body>
+</html>
