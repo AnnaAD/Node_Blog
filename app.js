@@ -5,7 +5,7 @@ app.use(express.static(__dirname + '/public'));
 
 
 var mongoose = require('mongoose');
-mongoose.connect("mongodb+srv://anna:bizzy@@cluster0-w6zx2.mongodb.net/test?retryWrites=true"",{ useNewUrlParser: true },function(){
+mongoose.connect("mongodb+srv://anna:bizzy@@cluster0-w6zx2.mongodb.net/test?retryWrites=true",{ useNewUrlParser: true },function(){
   console.log("connected to database");
 });
 
