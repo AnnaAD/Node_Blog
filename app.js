@@ -4,9 +4,13 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 
 
-var mongoose = require('mongoose');
-mongoose.connect("mongodb+srv://anna:bizzy%40@cluster0-w6zx2.mongodb.net/test?retryWrites=true",{ useNewUrlParser: true },function(){
-  console.log("connected to database");
+var mongoose = require("mongoose-sql");
+
+// Create connection: note default environment variables
+// returns a Knex instance
+mongoose.connect({
+    client: "pg",
+    connection : process.env.DATABASE_URL,
 });
 
 
