@@ -4,19 +4,18 @@ var app = express();
 app.use(express.static(__dirname + '/public'));
 
 
-var mongoose = require("mongoose-sql");
+const { Pool,Client } = require('pg');
+const dotenv = require('dotenv');
 
-// Create connection: note default environment variables
-// returns a Knex instance
-mongoose.connect({
-    client: "pg",
-    connection : process.env.DATABASE_URL,
-}, function(err) {
-	console.log("WHAT");
-  // If no error, successfully connected
-	console.log("connected" + err);
+dotenv.config();
+
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL
 });
 
+pool.on('connect', () => {
+  console.log('connected to the db');
+});
 
 var bodyParser = require('body-parser');
 app.use(bodyParser.json());
@@ -25,30 +24,41 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
-var postSchema = new mongoose.Schema({ title: String, body: String, date: String });
-var Post = mongoose.model('Post', postSchema);
-
-
 
 // Routes
 app.get("/", (req, res) => {
-	Post.find({}, (err, posts) => {
-		console.log(posts);
-		res.render('index', { posts: posts})
+
+	var out = res;
+	pool.query("SELECT * FROM blog", (err, res) => {
+	  if (err) {
+	    console.log(err.stack);
+	  } else {
+	    console.log(res.rows);
+			out.render('index', {posts:res.rows});
+	  }
 	});
+
 });
 
 app.post('/addpost', (req, res) => {
-	var postData = new Post(req.body);
-	postData.date = new Date(Date.now()).toLocaleString();
-	postData.save().then( result => {
-		res.redirect('/');
-	}).catch(err => {
-		    res.status(400).send("Unable to save data");
-		});
-		});
+	var out = res;
+	const query = {
+  text: 'INSERT INTO blog(body, title, date) VALUES($1, $2, $3)',
+  values: [req.body.body, req.body.title, new Date(Date.now()).toLocaleString()],
+	}
+
+	pool.query(query, (err, res) => {
+	  if (err) {
+	    console.log(err.stack);
+			out.status(400).send("Unable to save data");
+	  } else {
+			console.log(res.rows[0]);
+			out.redirect('/');
+	  }
+	})
+});
 
 // Listen
 app.listen(process.env.PORT || 3000, () => {
-	console.log('Server listing on 3000');
+	console.log('Server listing');
     });
