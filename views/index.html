@@ -15,7 +15,7 @@
       <% for(let i = posts.length-1; i >= 0; i--) { %>
             <h3 class = "fancy"><%- posts[i].title%></h3>
             <h5 class = "fancy"> <%-  posts[i].date%> </h5>
-            <p class = "post"><%- posts[i].body.replace("<", '&#60;').replace(">","&#62;").replace(new RegExp('\r?\n','g'), '<br />') %></p>
+            <p class = "post"><%- posts[i].body.replace(new RegExp('\r?\n','g'), '<br />') %></p>
             <hr>
         <% } %>
       </div>

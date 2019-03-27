@@ -24,6 +24,11 @@ app.use(bodyParser.urlencoded({ extended: true}));
 app.engine('html', require('ejs').renderFile);
 app.set('view engine', 'html');
 
+String.prototype.replaceAll = function(search, replacement) {
+    var target = this;
+    return target.replace(new RegExp(search, 'g'), replacement);
+};
+
 
 // Routes
 app.get("/", (req, res) => {
@@ -33,7 +38,7 @@ app.get("/", (req, res) => {
 	  if (err) {
 	    console.log(err.stack);
 	  } else {
-	    console.log(res.rows);
+	    //console.log(res.rows);
 			out.render('index', {posts:res.rows});
 	  }
 	});
@@ -44,7 +49,7 @@ app.post('/addpost', (req, res) => {
 	var out = res;
 	const query = {
   text: 'INSERT INTO blog(body, title, date) VALUES($1, $2, $3)',
-  values: [req.body.body, req.body.title, new Date(Date.now()).toLocaleString()],
+  values: [req.body.body.replaceAll("<", '&#60;').replaceAll(">","&#62;"), req.body.title, new Date(Date.now()).toLocaleString()],
 	}
 
 	pool.query(query, (err, res) => {
@@ -52,7 +57,7 @@ app.post('/addpost', (req, res) => {
 	    console.log(err.stack);
 			out.status(400).send("Unable to save data");
 	  } else {
-			console.log(res.rows[0]);
+			//console.log(res.rows[0]);
 			out.redirect('/');
 	  }
 	})
@@ -60,5 +65,5 @@ app.post('/addpost', (req, res) => {
 
 // Listen
 app.listen(process.env.PORT || 3000, () => {
-	console.log('Server listing');
+	console.log('Server Listening');
     });
